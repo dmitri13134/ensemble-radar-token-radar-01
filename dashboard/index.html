@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ensemble Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Ensemble Radar</h1>
+    <p class="sub">Pre-token protocols, ranked by what a token would be worth — priced by five signals, not one.</p>
+  </div>
+  <div class="meta" id="meta"></div>
+</header>
+
+<section class="model" id="model">
+  <h2>How the ranking works</h2>
+  <p>Every protocol gets five scores from 0 to 100, each from the snapshot alone. <strong>Scale</strong> is log TVL.
+  <strong>Momentum</strong> is the 7-day TVL change. <strong>Tenure</strong> is how long it has run with no token recorded.
+  <strong>Breadth</strong> is how many chains it runs on. <strong>Peer</strong> is the multiple its own category's tokened
+  protocols actually trade at. The ensemble blends them (scale 30, momentum 20, tenure 15, breadth 10, peer 25),
+  and the implied value is TVL at the category peer multiple, tilted by the ensemble. When the five signals disagree,
+  the row says so — <span class="tag agree">agree</span>, <span class="tag mixed">mixed</span> or
+  <span class="tag split">split</span> — instead of hiding the argument.</p>
+  <p class="note">Nothing here predicts a token launch. It prices what a token would be worth if the record stayed as it is.
+  A protocol “records no token” when the snapshot carries no market cap, CoinGecko id or symbol for it.</p>
+</section>
+
+<section class="controls" aria-label="Filters">
+  <label>Search <input id="q" type="search" placeholder="name or slug"></label>
+  <label>Category <select id="cat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+  <label>Consensus
+    <select id="cons"><option value="">Any</option><option value="agree">Agree</option><option value="mixed">Mixed</option><option value="split">Split</option></select>
+  </label>
+  <label>Min ensemble <input id="minEns" type="range" min="0" max="100" value="0" step="5"> <output id="minEnsOut">0</output></label>
+  <label>Sort
+    <select id="sort">
+      <option value="value">Implied value</option>
+      <option value="ensemble">Ensemble score</option>
+      <option value="tvl">TVL</option>
+      <option value="momentum">Momentum</option>
+      <option value="spread">Most disagreement</option>
+    </select>
+  </label>
+  <button id="reset" type="button">Reset</button>
+</section>
+
+<p class="count" id="count"></p>
+
+<main>
+  <table id="board">
+    <thead>
+      <tr><th>#</th><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>7d</th><th>Ensemble</th><th>Implied value</th><th>Signals</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <section class="detail" id="detail" hidden>
+    <div class="detail-head"><h2 id="dName"></h2><button id="dClose" type="button">Close</button></div>
+    <p class="dmeta" id="dMeta"></p>
+    <div class="signals" id="dSignals"></div>
+    <h3>Farm plan</h3>
+    <ol class="steps" id="dSteps"></ol>
+  </section>
+
+  <section class="live">
+    <h2>Already trading — the peers the multiples come from</h2>
+    <p class="note">These protocols already record a token, so they are never ranked. They are shown because their
+    market caps set the peer multiple each category is priced at.</p>
+    <table id="liveTable">
+      <thead><tr><th>Protocol</th><th>Category</th><th>TVL</th><th>Market cap</th><th>Mcap / TVL</th></tr></thead>
+      <tbody id="liveRows"></tbody>
+    </table>
+  </section>
+</main>
+
+<footer>
+  <p>Ensemble Radar · model <span id="modelVer"></span> · snapshot <span id="asOf"></span> · source: DefiLlama public API, as the snapshot records it.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
